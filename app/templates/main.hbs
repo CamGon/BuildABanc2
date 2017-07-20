@@ -1,0 +1,87 @@
+<div class="container">
+
+	<!-- header div -->
+	<div class="header clearfix" align="center">
+    	<h2 class="text-muted">MyBanc</h2>
+    </div>
+	<hr>
+
+	<!-- div for main interface -->
+	<div class="jumbotron">
+        <p class="lead">Welcome to Clearbanc! Please complete the fields below and we will update your account appropriately:</p>
+        <form {{action "update" on="submit"}}>
+          <p>
+            Amount to deposit: $ {{input id="depositAmount" type="number" min="0.00" max="10000.00" step="0.01" value="0" required="required"}}
+          </p>
+          <p>
+            Amount to withdraw: $ {{input id="withdrawlAmount" type="number" min="0.00" max="10000.00" step="0.01" value="0" required="required"}}
+          </p>
+          <p>
+            Amount on cash advance ($10 fee per advance): $ {{input id="cashAdvance" type="number" min="0.00" max="10000.00" step="10" value="0" required="required"}}
+          </p>
+          <p align="center">
+            <button type="submit" class="btn btn-default">Submit Changes</button>
+            <button {{action "toggleAccount"}} type="button" class="btn btn-default">View Account Details</button>
+            <button {{action "toggleHistory"}} type="button" class="btn btn-default">View Transaction History</button>
+          </p>
+        </form>
+        <div id="success" class="alert alert-success alert-dismissable" style="display:none">
+          <span class="close" onclick="$('#success').hide()" aria-label="close">&times;</span>
+          <strong>Success!</strong> Your account has been updated.
+        </div>
+        <div id="noFunds" class="alert alert-warning alert-dismissable" style="display:none">
+          <span class="close" onclick="$('#noFunds').hide()" aria-label="close">&times;</span>
+          <strong>Insufficient funds!</strong> Please ensure there is enough money in your account to at least match your withdrawl.
+        </div>
+    </div>
+
+    <!-- div for users account details; this is hidden by default -->
+    <div id="accountDetails" style="display:none">
+        <div class="page-header">
+          <h3 align="center">Account Details</h3>
+        </div>
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h3 class="panel-title">Total Funds ($)</h3>
+          </div>
+          <div id="funds" class="panel-body">{{model.totalFunds}}</div>
+        </div>
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h3 class="panel-title">Total Amount Taken on Cash Advance ($)</h3>
+          </div>
+          <div id="advance" class="panel-body">{{model.cashAdvance}}</div>
+        </div>
+    </div>
+
+    <!-- div for users transaction history; also hidden by default -->
+    <div id="history" style="display:none">
+    	<div class="page-header">
+          <h3 align="center">Transaction History</h3>
+        </div> 
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Submission #</th>
+              <th>Amount Deposited ($)</th>
+              <th>Amount Withdrawn ($)</th>
+              <th>Amount Taken On Cash Advance ($)</th>
+              <th>Account Total ($)</th>
+            </tr>
+          </thead>
+          <tbody>
+          	{{#each model.history as |history|}}
+          		<tr>
+          			<td>{{history.submissionNum}}</td>
+          			<td>{{history.deposited}}</td>
+          			<td>{{history.withdrawn}}</td>
+          			<td>{{history.advance}}</td>
+          			<td>{{history.total}}</td>
+          		</tr>
+          	{{/each}}
+          </tbody>
+        </table>
+    </div>
+    
+</div>
+{{outlet}}
